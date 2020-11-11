@@ -15,8 +15,14 @@ app.geometry("600x600")
 app.minsize(300,300)
 
 #etykieta z tekstem
-label = tk.Label(app, text="Hello World!") # Create a text label
-label.pack(padx=20, pady=20) # Pack it into the window
+label = tk.Label(app, text="Wpisz adres IP:")
+label.grid(row=1) # Create a text label
+#label.pack(padx=20, pady=20) # Pack it into the window
+
+#formatka do wprowadzania tekstu
+adresIP = tk.Entry(app)
+adresIP.grid(row=1, column=1)
+adresIP.insert(10,"192.168.1.100")
 
 #zdarzenie wywolywane po kliknieci na przycisk
 def HelloWorld():
@@ -24,11 +30,8 @@ def HelloWorld():
 
 #utworzenie przycisku
 ok = tk.Button(app, text="OK", width=20, command=HelloWorld)
-ok.pack()
+ok.grid(row=1,column=2)
 
-#formatka do wprowadzania tekstu
-e1 = tk.Entry(app)
-e1.pack()
 
 #wyswietla tekst w konsoli nie w okienku
 print('hello world')
