@@ -32,6 +32,17 @@ def HelloWorld():
 ok = tk.Button(app, text="OK", width=20, command=HelloWorld)
 ok.grid(row=1,column=2)
 
+root = tk.Tk()
+scrollbar = root.Scrollbar(root)
+scrollbar.pack( side = "RIGHT", fill = "Y" )
+
+mylist = tk.Listbox(root, yscrollcommand = scrollbar.set )
+for line in range(100):
+   mylist.insert(END, "This is line number " + str(line))
+
+mylist.pack( side = LEFT, fill = BOTH )
+scrollbar.config( command = mylist.yview )
+
 
 #wyswietla tekst w konsoli nie w okienku
 print('hello world')

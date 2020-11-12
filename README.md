@@ -5,7 +5,7 @@ Planowane kroki
 + otwarcie pierwszego okienka
 + dodanie przycisku ktory dla sie kliknac
 + dodanie pola do wprowadzania danych
-- organizacja elementow w okienku
++ organizacja elementow w okienku
 - stworzenie listy z wprowadzanymi danymi
 - utworzenie pola ktore bedzie dzialac jak konsola - mozna swobodnie wypisywac w nim tekst
 - stworzenie menu programu
