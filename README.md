@@ -13,3 +13,8 @@ Planowane kroki
 - [] utworzenie pola ktore bedzie dzialac jak konsola - mozna swobodnie wypisywac w nim tekst
 - [] stworzenie menu programu
 - [] wyswietlenie grafiki w okienku
+- [+] test pobrania danych ze strony
+- [+] dodawanie danych pobranych z pliku json 
+- [] reorganizacja kodu
+- [] pobieranie listy urzadzen do przeskanowania z pliku konfiguracyjnego
+- [] skanowanie urzadzen z listy
