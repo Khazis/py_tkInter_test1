@@ -39,7 +39,7 @@ tv.heading(1, text="IP")
 tv.column(1, minwidth=120,  width=120, stretch=NO, anchor=W) 
 tv.heading(2, text="APC")
 tv.column(2, minwidth=120, width=120, stretch=NO, anchor=CENTER) 
-tv.heading(3, text="KANAŁ")
+tv.heading(3, text="SYGNAŁ")
 tv.column(3, minwidth=40, width=60, stretch=NO, anchor=CENTER) 
 tv.heading(4, text="SZYBKOŚĆ")
 tv.column(4, minwidth=40, width=70, stretch=NO, anchor=CENTER) 
@@ -53,7 +53,8 @@ tv.heading(8, text="PLATFORMA")
 tv.column(8, minwidth=100, width=100, stretch=YES, anchor=W) 
 #tv.heading(9, text="UPTIME")
 #tv.column(9, minwidth=80, width=100, stretch=YES, anchor=W) 
-
+tv.pack(expand=YES, fill=BOTH)
+'''
 dane=[
     ["AP04","10.100.100.87","23","5400","9/78","65","23","35"],
     ["AP01","10.100.100.2","34","5420","9/78","12","78","23"],
@@ -76,9 +77,32 @@ for linia in dane:
 tv.move("4","1",'end')
 tv.move("3","4",'end')
 tv.move("2","4",'end')
-tv.pack(expand=YES, fill=BOTH)
 
+'''
+def getAP(apdata):
 
+    headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
+
+    login_data = {
+        'username': apdata[1],
+        'password': apdata[2],
+        'uri': 'sta.cgi',
+    }
+
+    with requests.Session() as s:
+        url = 'http://'+apdata[0]+'/login.cgi'
+        r = s.get(url, headers=headers)
+        r = s.post(url, data=login_data, headers=headers)
+        r1 = s.get('http://'+apdata[0]+'/status.cgi', headers=headers)
+        r1.encoding='utf8'
+        res=json.loads(r1.text)
+    
+    return res
+
+apData=getAP(AP[0])
+apHost=apData["host"]
+apWifi=apData["wireless"]
+tv.insert(parent="", index='end', iid=0, text=apWifi['essid'], values=(AP[0][0],apWifi['count'],apWifi['frequency'].split(" ")[0],apWifi['mode'],apWifi['ack'],str(apWifi['ccq']/10),apWifi["signal"],apHost["devmodel"]+' '+apHost['fwprefix']+apHost['fwversion']))    
 
 
 headers = {
@@ -91,6 +115,7 @@ login_data = {
     'uri': 'sta.cgi',
 }
 
+nr=1
 with requests.Session() as s:
     url = 'http://10.100.100.87/login.cgi'
     r = s.get(url, headers=headers)
