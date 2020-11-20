@@ -16,5 +16,9 @@ Planowane kroki
 - [+] test pobrania danych ze strony
 - [+] dodawanie danych pobranych z pliku json 
 - [] reorganizacja kodu
-- [] pobieranie listy urzadzen do przeskanowania z pliku konfiguracyjnego
-- [] skanowanie urzadzen z listy
+- [+] pobieranie listy urzadzen do przeskanowania z pliku konfiguracyjnego
+- [+] skanowanie urzadzen z listy
+- [] zabezpieczyc przed bledem polaczenia
+- [] zrobic opcje zeby laczylo sie po http i https
+- [] wydajnosc programu
+- [] wilowatkowosc?

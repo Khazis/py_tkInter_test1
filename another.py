@@ -79,68 +79,58 @@ tv.move("3","4",'end')
 tv.move("2","4",'end')
 
 '''
-def getAP(apdata):
+def getAP(apData):
 
     headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
     login_data = {
-        'username': apdata[1],
-        'password': apdata[2],
+        'username': apData[1],
+        'password': apData[2],
         'uri': 'sta.cgi',
     }
 
+    res = {'AP':'', 'APC':''}
+
     with requests.Session() as s:
-        url = 'http://'+apdata[0]+'/login.cgi'
+        url = 'https://'+apData[0]+'/login.cgi'
         r = s.get(url, headers=headers)
         r = s.post(url, data=login_data, headers=headers)
-        r1 = s.get('http://'+apdata[0]+'/status.cgi', headers=headers)
+        r1 = s.get('http://'+apData[0]+'/status.cgi', headers=headers)
         r1.encoding='utf8'
-        res=json.loads(r1.text)
-    
+        res['AP']=json.loads(r1.text)
+
+    with requests.Session() as s:
+        url = 'https://'+apData[0]+'/login.cgi'
+        r = s.get(url, headers=headers)
+        r = s.post(url, data=login_data, headers=headers)
+        r1 = s.get('http://'+apData[0]+'/sta.cgi', headers=headers)
+        r1.encoding='utf8'
+        res['APC']=json.loads(r1.text)
+
     return res
 
-apData=getAP(AP[0])
-apHost=apData["host"]
-apWifi=apData["wireless"]
-tv.insert(parent="", index='end', iid=0, text=apWifi['essid'], values=(AP[0][0],apWifi['count'],apWifi['frequency'].split(" ")[0],apWifi['mode'],apWifi['ack'],str(apWifi['ccq']/10),apWifi["signal"],apHost["devmodel"]+' '+apHost['fwprefix']+apHost['fwversion']))    
-
-
-headers = {
-    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
-}
-
-login_data = {
-    'username': LOGIN,
-    'password': PASSWORD,
-    'uri': 'sta.cgi',
-}
-
+i=0
 nr=1
-with requests.Session() as s:
-    url = 'http://10.100.100.87/login.cgi'
-    r = s.get(url, headers=headers)
-    r = s.post(url, data=login_data, headers=headers)
-    r1 = s.get('http://10.100.100.87/sta.cgi', headers=headers)
-    r1.encoding='utf8'
-    res=json.loads(r1.text)
-    
-    for linia in res:
+for newAP in apList:
+    print('probuje '+apList[i][0])
+    apData=getAP(apList[i])
+    apHost=apData['AP']["host"]
+    apWifi=apData['AP']["wireless"]
+    tv.insert(parent="", index='end', iid=apWifi['apmac'].replace(':',''), text=apWifi['essid'], values=(newAP[i][0],apWifi['count'],apWifi['frequency'].split(" ")[0],apWifi['mode'],apWifi['ack'],str(apWifi['ccq']/10),apWifi["signal"],apHost["devmodel"]+' '+apHost['fwprefix']+apHost['fwversion']))    
+
+
+    for linia in apData['APC']:
         #print(json.loads(linia))
         #print(linia['signals'])
         remote=''
         if 'remote' in linia:
             #print(linia['remote']['platform'])
             remote=linia['remote']['platform']
-        tv.insert(parent="0", index='end', iid=nr, text=linia['name'], values=(linia['lastip'],linia['mac'],linia['signal'],str(int(linia['tx']))+"/"+str(int(linia['rx'])),linia['tx_latency'],linia['ccq'],linia['airmax']['quality'],remote))    
+        tv.insert(parent=apWifi['apmac'].replace(':',''), index='end', iid=nr, text=linia['name'], values=(linia['lastip'],linia['mac'],linia['signal'],str(int(linia['tx']))+"/"+str(int(linia['rx'])),linia['tx_latency'],linia['ccq'],linia['airmax']['quality'],remote))    
         nr+=1
 
-'''
-print(res['name'])
-print(res['mac'])
-print(res['lastip'])
-print(res['signal'])
-print(r1.text) 
-'''
+    i+=1
+
 
 
 win.geometry("1100x500")
